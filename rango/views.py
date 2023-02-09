@@ -4,9 +4,9 @@ from django.http import Http404
 from datetime import datetime
 
 from rango.models import Category, Page
-from rango.forms import CategoryForm
-from rango.forms import PageForm
+from rango.forms import CategoryForm, PageForm
 from rango.forms import UserForm, UserProfileForm
+
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
@@ -144,17 +144,17 @@ def register(request):
 ###################################
 
 
-#chapter 7 ?#######
-
+#chapter 6-7#######
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
     except Category.DoesNotExist:
         category = None
         
-    # You cannot add a page to a Category that does not exist...
+    # You cannot add a page to a Category that does not exist.
     if category is None:
-        return redirect('/rango/')
+        return redirect(reverse('rango:index'))
     
     form = PageForm()
     
@@ -167,9 +167,7 @@ def add_page(request, category_name_slug):
                 page.category = category
                 page.views = 0
                 page.save()
-            return redirect(reverse('rango:show_category',
-            kwargs={'category_name_slug':
-            category_name_slug}))
+                return redirect(reverse('rango:show_category', kwargs={'category_name_slug': category_name_slug}))
         else:
             print(form.errors)
     
@@ -179,34 +177,32 @@ def add_page(request, category_name_slug):
 def show_category(request,category_name_slug):
     context_dict = {}
     try:
-    # The .get() method returns one model instance or raises an exception.
+       # The .get() method returns one model instance or raises an exception.
         category =Category.objects.get(slug=category_name_slug)
-    # Retrieve all of the associated pages.
-    # The filter() will return a list of page objects or an empty list.
+       # The filter() will return a list of page objects or an empty list.
         pages = Page.objects.filter(category=category)
-    # Adds our results list to the template context under name pages.
+
         context_dict['pages'] = pages
         context_dict['category'] = category
 
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
+        
     return render(request, 'rango/category.html', context=context_dict)
 
+@login_required 
 def add_category(request):
     form = CategoryForm()
-# A HTTP POST?
+    # A HTTP POST?
     if request.method == 'POST':
         form = CategoryForm(request.POST)
         if form.is_valid():
             # Save the new category to the database.
             form.save(commit=True)
-
-            # Now that the category is saved, we could confirm this.
-            # For now, just redirect the user back to the index view.
-            return redirect('/rango/')
-    else:
-        print(form.errors)
+            return redirect(reverse('rango:index'))
+        else:
+            print(form.errors)
     # Will handle the bad form, new form, or no form supplied cases.
     # Render the form with error messages (if any).
     return render(request, 'rango/add_category.html', {'form': form})
@@ -217,13 +213,12 @@ def add_category(request):
 #Early Chapters
     
 def index(request):
-      
-    context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!'}
 
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
     
     context_dict = {}
+    context_dict['boldmessage']= 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
     context_dict['visits'] = request.session['visits']
@@ -234,9 +229,7 @@ def index(request):
     # Call the helper function to handle the cookies
     visitor_cookie_handler(request)
     context_dict['visits'] = request.session['visits']
-    
-    response = render(request, 'rango/index.html', context_dict)
-    
+       
     return response
     
 #    return render(request, 'rango/index.html', context_dict)

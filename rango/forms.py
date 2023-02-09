@@ -17,20 +17,6 @@ class UserProfileForm(forms.ModelForm):
         fields = ('website', 'picture',)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Earlier Chapters
 
 class CategoryForm(forms.ModelForm):

@@ -9,7 +9,12 @@
 <body>
     <h1>Rango says...</h1>
     <div>
-        Hey there partner! <br />
+       {% if user.is_authenticated %}
+            Howdy {{ user.username }}!
+        {% else %}
+            Hey there partner!
+        {% endif %}
+
         
         <strong>{{ boldmessage }}</strong><br/>    
       
@@ -17,7 +22,7 @@
     
     <div>
         <h2>Most Liked Categories</h2>
-    {% if categories %}
+        {% if categories %}
      <ul>
         {% for category in categories %}
      <li><a href="/rango/category/{{ category.slug }}"></a>{{ category.name }}</li>
@@ -48,7 +53,7 @@
 <!--        <a href="/rango/about/">About</a><br />-->
         <a href="/rango/add_category/">Add a New Category</a><br/>
         <img style="width:600px;height:400px;", src="{% static 'images/rango-close-up.jpg' %}"
-alt="Picture of our beloved mascot: Rango" /> <!-- New line -->
+alt="Picture of our beloved mascot: Rango" /> 
     </div>
         
 </body>

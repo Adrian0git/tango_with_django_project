@@ -1,16 +1,68 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
+
 from rango.models import Category, Page
 from rango.forms import CategoryForm
 from rango.forms import PageForm
 from rango.forms import UserForm, UserProfileForm
-
 from django.shortcuts import redirect
 from django.urls import reverse
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 #Chapter 9
+
+@login_required
+def restricted(request):
+    
+    context_dict ={'bold': 'Restricted Page'}
+    return render(request, 'rango/restricted.html', context_dict)
+#    return HttpResponse("Since you're logged in, you can see this text!")
+    
+    #log out
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+    # Take the user back to the homepage.
+    return redirect(reverse('rango:index'))
+
+
+
+def user_login(request):
+# If the request is a HTTP POST, try to pull out the relevant information.
+    if request.method == 'POST':
+        # We use request.POST.get('<variable>') as opposed
+        # to request.POST['<variable>'], because the
+        # request.POST.get('<variable>') returns None if the
+        # value does not exist, while request.POST['<variable>']
+        # will raise a KeyError exception.
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+        # If we have a User object, the details are correct.
+        # If None (Python's way of representing the absence of a value), no user
+        # with matching credentials was found.
+        if user:
+            if user.is_active:
+            # We'll send the user back to the homepage.
+                    login(request, user)
+                    return redirect(reverse('rango:index'))
+            else:
+            # An inactive account was used - no logging in!
+                    return HttpResponse("Your Rango account is disabled.")
+        else:
+            # Bad login details were provided. So we can't log the user in.
+                print(f"Invalid login details: {username}, {password}")
+                return HttpResponse("Invalid login details supplied.")
+    # The request is not a HTTP POST, so display the login form.
+    # This scenario would most likely be a HTTP GET.
+    else:
+    # blank dictionary object...
+        return render(request, 'rango/login.html')
 
 def register(request):
     registered = False
@@ -55,19 +107,6 @@ def register(request):
         
     return render(request, 'rango/register.html',context = {'user_form' : user_form, 'profile_form' : profile_form, 'registered' : registered})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ###################################
 
 def add_page(request, category_name_slug):
@@ -88,10 +127,10 @@ def add_page(request, category_name_slug):
         
         if form.is_valid():
             if category:
-            page = form.save(commit=False)
-            page.category = category
-            page.views = 0
-            page.save()
+                page = form.save(commit=False)
+                page.category = category
+                page.views = 0
+                page.save()
             return redirect(reverse('rango:show_category',
             kwargs={'category_name_slug':
             category_name_slug}))
@@ -154,7 +193,7 @@ def index(request):
     context_dict = {'boldmessage': 'Crunchy, creamy, cookie, candy, cupcake!'}
 
     category_list = Category.objects.order_by('-likes')[:5]
-    page_list = Page.objects.order_by('- views')[:5]
+    page_list = Page.objects.order_by('-views')[:5]
     
     context_dict = {}
     context_dict['categories'] = category_list

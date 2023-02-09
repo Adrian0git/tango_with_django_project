@@ -139,3 +139,5 @@ MEDIA_URL = '/media/'
 #Login syntax
 
 LOGIN_URL = 'rango:login'
+
+

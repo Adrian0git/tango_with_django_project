@@ -43,7 +43,7 @@ def visitor_cookie_handler(request):
         # Set the last visit cookie
         request.session['last_visit'] = last_visit_cookie
     # Update/set the visits cookie
-    request.session['visits'] visits
+    request.session['visits'] = visits
 
 
 #Chapter 9

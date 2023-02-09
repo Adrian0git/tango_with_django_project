@@ -15,6 +15,7 @@ class Category(models.Model):
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
+        self.slug = slugify(self.likes)
         super(Category, self).save(*args, **kwargs)
         
     class Meta:
@@ -39,6 +40,7 @@ class UserProfile(models.Model):
     # The additional attributes we wish to include.
     website = models.URLField(blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
+    
     def __str__(self):
         return self.user.username
 

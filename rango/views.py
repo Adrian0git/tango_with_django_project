@@ -2,11 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 from datetime import datetime
-
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm
 from rango.forms import UserForm, UserProfileForm
-
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login
@@ -102,40 +100,27 @@ def register(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
         profile_form = UserProfileForm(request.POST)
-        
-        
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
-            
-            # Now we hash the password with the set_password method
-            # Once hashed, we can update the user object.
             user.set_password(user.password)
             user.save()
-            
             # Since we need to set the user attribute ourselves,
             # we set commit=False. This delays saving the model
-
             profile = profile_form.save(commit=False)
             profile.user = user
             
-            if 'picture' in request.FLIES:
-                profile.picture= request.FLIES['picture']
+            if 'picture' in request.FILES:
+                profile.picture= request.FILES['picture']
             
-            # Now we save the UserProfile model instance.
-            profile.save()
-            
-            # Update our variable to indicate that the template
-            # registration was successful
-            
+            profile.save()        
             registered = True 
         else:
             # Prints problems to terminal
             print (user_form.errors, profile_forms.errors)
     else:
         # If not a HTTP POST, Render form using two modelForm instances. --- Blank form ready for user input
-        
         user_form = UserForm()
-        profile_form = USerProfileForm()
+        profile_form = UserProfileForm()
         
     return render(request, 'rango/register.html',context = {'user_form' : user_form, 'profile_form' : profile_form, 'registered' : registered})
 

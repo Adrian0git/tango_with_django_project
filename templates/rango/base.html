@@ -18,6 +18,7 @@
             {% endblock %}
             <div>
             {% block sidebar_block %}
+                <h3><b> Category List </b></h3>
                 {% get_category_list category %}
             {% endblock %}
             </div>
@@ -26,6 +27,7 @@
         </div>
         <hr/>
         <div>
+            <i><strong>Menu Bar</strong></i>            
             <ul>
             <!-- Outside the conditional statements, ALWAYS show -->
             <li><a href="{% url 'rango:about' %}">About</a></li>

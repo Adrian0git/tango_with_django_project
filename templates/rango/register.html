@@ -13,7 +13,7 @@
 
 {% else %}
 Rango says: <strong>register here!</strong><br />
-<form id="user_form" method="post" action="{% url' rango:register' %}" enctype="multipart/form-data">
+<form id="user_form" method="post" action="{% url 'rango:register' %}" enctype="multipart/form-data">
 <!--above Sending package and data -->
     {% csrf_token %}
 

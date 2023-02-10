@@ -7,6 +7,7 @@
 
 {% block body_block %}
 <h1><b>Login to Rango</b></h1>
+<br/>
 
 <form id="login_form" method="post" action="{% url 'rango:login' %}">
         {% csrf_token %}

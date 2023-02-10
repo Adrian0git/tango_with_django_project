@@ -1,21 +1,21 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
+{% load staticfiles %} 
 
-{% load staticfiles %} <!-- New line -->
+{% block title_block %}
+        Homepage 
+{% endblock %}
+{% block body_block %}
 
-<html>
-<head>
-    <title>Rango</title>
-</head>
-<body>
     <h1>Rango says...</h1>
+    
     <div>
        {% if user.is_authenticated %}
-            Howdy {{ user.username }}!
+        Howdy <i style=" color:blueviolet"><b>{{ user.username }}!</b></i>
         {% else %}
             Hey there partner!
         {% endif %}
-
-        
+        <br/>
+        <br/>
         <strong>{{ boldmessage }}</strong><br/>    
       
     </div>
@@ -32,11 +32,11 @@
      </ul>
     {% else %}
             <strong>There are no categories present.</strong>
-        {% endif %}
+    {% endif %}
     </div>
     
     
-    
+    <br><br/>
     
     <div>
         <h2>Most Viewed Pages</h2>
@@ -53,14 +53,12 @@
     
     
     <div>
-        Here is the about page.
-        <a href="{% url 'rango:about' %}">About</a>
-<!--        <a href="/rango/about/">About</a><br />-->
-        <a href="/rango/add_category/">Add a New Category</a><br/>
+    
+    <br/>
+        
         <img style="width:600px;height:400px;", src="{% static 'images/rango-close-up.jpg' %}"
 alt="Picture of our beloved mascot: Rango" /> 
     </div>
         
     
-</body>
-</html>
+{% endblock %}

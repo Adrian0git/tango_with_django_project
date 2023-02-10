@@ -50,12 +50,10 @@ def visitor_cookie_handler(request):
 
 @login_required
 def restricted(request):
-    
     context_dict ={'bold': 'Restricted Page'}
     return render(request, 'rango/restricted.html', context_dict)
-#    return HttpResponse("Since you're logged in, you can see this text!")
     
-    #log out
+
 @login_required
 def user_logout(request):
     # Since we know the user is logged in, we can now just log them out.
@@ -221,20 +219,19 @@ def index(request):
     context_dict['boldmessage']= 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
-    context_dict['visits'] = request.session['visits']
     
     # Obtain our Response object early so we can add cookie information.
     response = render(request, 'rango/index.html', context=context_dict)
 
     # Call the helper function to handle the cookies
     visitor_cookie_handler(request)
-    context_dict['visits'] = request.session['visits']
-       
-    return response
     
-#    return render(request, 'rango/index.html', context_dict)
+    return render(request, 'rango/index.html', context_dict)
      
 def about(request):
+    context_dict2 = {}
     context_dict2 = {'name':'Adrian'}  
+    visitor_cookie_handler(request)
+    context_dict2['visits'] = request.session['visits']
     
-    return render(request, 'rango/about.html', context_dict2)
+    return render(request, 'rango/about.html', context=context_dict2)

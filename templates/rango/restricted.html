@@ -2,6 +2,13 @@
 {% load staticfiles %}
 
 {% block title_block %}
-   <strong>{{ bold }}</strong><br/>  
+   <strong>{{ bold }}</strong><br/> 
+{% endblock %}
+
+{% block body_block %}
+    <p style="color:crimson"><strong><em>
+        You should not be here please return to the previous page, homepage or sign in.
+        </em></strong>
+    </p>
 {% endblock %}
 

@@ -6,20 +6,23 @@
 {% endblock %}
 {% block body_block %}
 
-    <h1>Rango says...</h1>
-    
-    <div>
-       {% if user.is_authenticated %}
-        Howdy <i style=" color:blueviolet"><b>{{ user.username }}!</b></i>
-        {% else %}
-            Hey there partner!
-        {% endif %}
-        <br/>
-        <br/>
-        <strong>{{ boldmessage }}</strong><br/>    
-      
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1 class="jumbotron-heading">Rango says...</h1>
+        <div> 
+            <h2 class="h2">
+           {% if user.is_authenticated %}
+            Howdy <i style=" color:blueviolet"><b>{{ user.username }}!</b></i>
+            {% else %}
+                Hey there partner!
+            {% endif %}
+            <br/>
+            <br/>
+            <strong>{{ boldmessage }}</strong><br/>    
+            </h2>
+        </div>
     </div>
-    
+</div>
     
     
     <div>

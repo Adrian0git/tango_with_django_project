@@ -6,12 +6,17 @@
 {% endblock %}
 
 {% block body_block %}
-    <h1>Welcome to the About page</h1>
-    <div>
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1 class="jumbotron-heading">Welcome to the About page</h1>
+    </div>
+</div>
+
+<div>
         This tutorial has been put together by <strong>{{ name }}</strong>.
         <br/>  
         <br/>
-    </div>
+</div>
 
     <div>
         <img style="width:600px;height:400px;", src="{% static 'images/rango-close-up.jpg' %}"

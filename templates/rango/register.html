@@ -1,3 +1,4 @@
+<!-- Decommissioned Chapter 11
 {% extends 'rango/base.html' %}
 {% load staticfiles %}
 
@@ -14,7 +15,7 @@
 {% else %}
 Rango says: <strong>register here!</strong><br />
 <form id="user_form" method="post" action="{% url 'rango:register' %}" enctype="multipart/form-data">
-<!--above Sending package and data -->
+above Sending package and data 
     {% csrf_token %}
 
     {{ user_form.as_p }}
@@ -23,4 +24,4 @@ Rango says: <strong>register here!</strong><br />
     <input type="submit" name="submit" value="Register" />
 </form>
 {% endif %}
-{% endblock %}
+{% endblock %}-->

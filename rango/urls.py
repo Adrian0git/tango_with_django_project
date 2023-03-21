@@ -36,7 +36,7 @@ urlpatterns = [
     path('restricted/', views.restricted, name='restricted'),
     path('search/', views.search_bar, name='search'),
     path('goto/', views.goto_url, name='goto'),
-
+    path('register_profile/', views.register_profile, name='register_profile'),
     
     
     

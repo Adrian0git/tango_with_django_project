@@ -18,6 +18,32 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
 
+#Chapter 15
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+            return redirect(reverse('rango:index'))
+        else:
+            print(form.errors)
+    context_dict = {'form': form}
+    return render(request, 'rango/profile_registration.html', context_dict)
+
+
+####
+
+
+
+
+
+
+
 def goto_url():
         if request.method == 'GET':
             page_id = request.GET.get('page_id')
@@ -89,6 +115,7 @@ def visitor_cookie_handler(request):
 @login_required
 def restricted(request):
     context_dict ={'bold': 'Restricted Page'}
+    
     return render(request, 'rango/restricted.html', context_dict)
     
     #decomissioned from chapter 11 #################################
@@ -221,7 +248,8 @@ def show_category(request,category_name_slug):
             query = request.POST['query'].strip()
             if query:
                 context_dict['result_list'] = run_query(query)
-                
+                context_dict['query'] = query
+
     return render(request, 'rango/category.html', context=context_dict)
 
 @login_required 

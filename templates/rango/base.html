@@ -32,6 +32,9 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'rango:about' %}">About</a></li>
+                        {% if user.is_superuser %}
+                         <li class="nav-item "><a class="nav-link" href="{% url 'rango:search' %}">Search</a></li>
+                        {% endif %}
                         {% if user.is_authenticated %}
                         <li class="nav-item "><a class="nav-link" href="{% url 'rango:restricted' %}">Restricted</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
@@ -61,6 +64,7 @@
                     
                     <!-- FOOTER -->
                     <footer>
+                        <br/>
                         <p class="float-right"><a href="#">Back to top</a></p>
                         <p>&copy; 2020 Tango With Django 2 &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
                     </footer>

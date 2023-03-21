@@ -1,15 +1,55 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import Http404
 from datetime import datetime
-from rango.models import Category, Page
+
+from rango.models import Category, Page, UserProfile
+
 from rango.forms import CategoryForm, PageForm
 from rango.forms import UserForm, UserProfileForm
-from django.shortcuts import redirect
+
 from django.urls import reverse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+
+from rango.bing_search import run_query
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
+
+def goto_url():
+        if request.method == 'GET':
+            page_id = request.GET.get('page_id')
+            try:
+                selected_page = Page.objects.get(id=page_id)
+            except Page.DoesNotExist:
+                return redirect(reverse('rango:index'))
+            selected_page.views = selected_page.views + 1
+            selected_page.save()
+            return redirect(selected_page.url)
+        return redirect(reverse('rango:index'))
+
+def search_denial():
+    # Take the user back to the homepage.
+    return redirect(reverse('rango:restricted'))
+
+###Chapter 13
+def search_bar(request):
+    result_list = []
+    query = ''
+    
+    if request.method == 'POST':
+        #Until You have made a key You will be sent to this page - if deleted without key, a 404 page shows
+        return search_denial() # Delete when key is made 
+        
+        
+        query = request.POST['query'].strip()
+
+        if query:
+            result_list = run_query(query)
+    
+    return render(request, 'rango/search.html', {'result_list': result_list, 'query': query})
 
 
 ####Chapter 10
@@ -161,11 +201,12 @@ def add_page(request, category_name_slug):
 
 def show_category(request,category_name_slug):
     context_dict = {}
+    
     try:
        # The .get() method returns one model instance or raises an exception.
         category =Category.objects.get(slug=category_name_slug)
        # The filter() will return a list of page objects or an empty list.
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         context_dict['pages'] = pages
         context_dict['category'] = category
@@ -174,6 +215,13 @@ def show_category(request,category_name_slug):
         context_dict['category'] = None
         context_dict['pages'] = None
         
+    if request.method == 'POST':
+        #404 error until key implemented
+        if request.method == 'POST':
+            query = request.POST['query'].strip()
+            if query:
+                context_dict['result_list'] = run_query(query)
+                
     return render(request, 'rango/category.html', context=context_dict)
 
 @login_required 
